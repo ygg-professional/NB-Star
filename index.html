@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Proyecto Final - HTML Canvas</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: white;
+        }
+        canvas {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="700" height="500"></canvas>
+
+<script>
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+
+// Puntos de la estrella
+const PuntosX13 = [390, 450, 630, 480, 540, 390, 240, 300, 150, 330, 390];
+const PuntosY13 = [40, 180, 180, 260, 400, 320, 400, 260, 180, 180, 40];
+
+// Puntos del resto de la figura (zorro y detalles)
+const PuntosX1 = [150, 170, 180, 200, 220, 230, 240, 230, 220, 180, 150, 120, 80, 70, 60, 70, 80, 100, 120, 130, 150];
+const PuntosY1 = [60, 70, 60, 40, 30, 30, 60, 90, 120, 90, 120, 90, 120, 90, 60, 30, 30, 40, 60, 70, 60];
+
+const PuntosX2 = [150, 180, 220, 230, 240, 230, 220, 190, 160, 140, 110, 80, 70, 60, 70, 80, 120, 150];
+const PuntosY2 = [120, 90, 120, 150, 190, 200, 190, 220, 230, 230, 220, 190, 200, 190, 150, 120, 90, 120];
+
+const PuntosX3 = [80, 110, 110, 90, 80, 80];
+const PuntosY3 = [40, 70, 80, 100, 90, 40];
+
+const PuntosX4 = [220, 220, 210, 190, 190, 220];
+const PuntosY4 = [40, 90, 100, 80, 70, 40];
+
+const PuntosX5 = [160, 170, 180, 180, 160, 140, 120, 120, 130, 140];
+const PuntosY5 = [130, 170, 190, 200, 210, 210, 200, 190, 170, 130];
+
+const PuntosX6 = [100, 120];
+const PuntosY6 = [160, 200];
+
+const PuntosX7 = [200, 180];
+const PuntosY7 = [160, 200];
+
+const PuntosX8 = [140, 160, 170, 160, 140, 130, 140];
+const PuntosY8 = [180, 180, 190, 210, 210, 190, 180];
+
+const PuntosX9 = [100, 110, 130, 110];
+const PuntosY9 = [130, 130, 140, 140];
+
+const PuntosX10 = [190, 200, 190, 170];
+const PuntosY10 = [130, 130, 140, 140];
+
+const PuntosX11 = [110, 120, 110];
+const PuntosY11 = [130, 140, 140];
+
+const PuntosX12 = [190, 190, 180];
+const PuntosY12 = [130, 140, 140];
+
+// Calcular bounding box global
+const allPointsX = [].concat(
+    PuntosX13, PuntosX1, PuntosX2, PuntosX3, PuntosX4,
+    PuntosX5, PuntosX6, PuntosX7, PuntosX8,
+    PuntosX9, PuntosX10, PuntosX11, PuntosX12
+);
+const allPointsY = [].concat(
+    PuntosY13, PuntosY1, PuntosY2, PuntosY3, PuntosY4,
+    PuntosY5, PuntosY6, PuntosY7, PuntosY8,
+    PuntosY9, PuntosY10, PuntosY11, PuntosY12
+);
+
+const minX = Math.min(...allPointsX);
+const maxX = Math.max(...allPointsX);
+const minY = Math.min(...allPointsY);
+const maxY = Math.max(...allPointsY);
+
+const figureWidth = maxX - minX;
+const figureHeight = maxY - minY;
+
+// Centro del canvas
+const canvasCenterX = canvas.width / 2;
+const canvasCenterY = canvas.height / 2;
+
+// Centro de la figura
+const figureCenterX = (minX + maxX) / 2;
+const figureCenterY = (minY + maxY) / 2;
+
+// Offset para centrar la figura completa
+const offsetX = canvasCenterX - figureCenterX;
+const offsetY = canvasCenterY - figureCenterY;
+
+// Calcular centro de la estrella
+const minX13 = Math.min(...PuntosX13);
+const maxX13 = Math.max(...PuntosX13);
+const minY13 = Math.min(...PuntosY13);
+const maxY13 = Math.max(...PuntosY13);
+
+const estrellaCenterX = (minX13 + maxX13) / 2 + offsetX;
+const estrellaCenterY = (minY13 + maxY13) / 2 + offsetY;
+
+// Función para dibujar polígonos
+function drawPolygon(X, Y, colorFill, strokeWidth = 4) {
+    ctx.beginPath();
+    ctx.moveTo(X[0] + offsetX, Y[0] + offsetY);
+    for (let i = 1; i < X.length; i++) {
+        ctx.lineTo(X[i] + offsetX, Y[i] + offsetY);
+    }
+    ctx.closePath();
+    ctx.fillStyle = colorFill;
+    ctx.fill();
+    ctx.lineWidth = strokeWidth;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+}
+
+// Función para dibujar polilíneas
+function drawPolyline(X, Y, strokeWidth = 4) {
+    ctx.beginPath();
+    ctx.moveTo(X[0] + offsetX, Y[0] + offsetY);
+    for (let i = 1; i < X.length; i++) {
+        ctx.lineTo(X[i] + offsetX, Y[i] + offsetY);
+    }
+    ctx.lineWidth = strokeWidth;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+}
+
+// Dibujo
+drawPolygon(PuntosX13, PuntosY13, "yellow", 10); // Estrella
+
+// Texto centrado en la estrella
+ctx.font = "60px Snap ITC, sans-serif";
+ctx.fillStyle = "black";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillText("Yesica", estrellaCenterX, estrellaCenterY);
+
+// Zorro
+drawPolygon(PuntosX1, PuntosY1, "rgb(235, 60, 26)");
+drawPolygon(PuntosX2, PuntosY2, "rgb(220, 191, 191)");
+drawPolygon(PuntosX3, PuntosY3, "rgb(220, 191, 191)");
+drawPolygon(PuntosX4, PuntosY4, "rgb(220, 191, 191)");
+drawPolygon(PuntosX5, PuntosY5, "rgb(235, 60, 26)");
+drawPolyline(PuntosX6, PuntosY6);
+drawPolyline(PuntosX7, PuntosY7);
+drawPolygon(PuntosX8, PuntosY8, "black");
+drawPolygon(PuntosX9, PuntosY9, "white");
+drawPolygon(PuntosX10, PuntosY10, "white");
+ctx.lineWidth = 2.5;
+drawPolygon(PuntosX11, PuntosY11, "rgb(235, 60, 26)");
+drawPolygon(PuntosX12, PuntosY12, "rgb(235, 60, 26)");
+ctx.lineWidth = 4;
+</script>
+</body>
+</html>
